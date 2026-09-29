@@ -1,0 +1,2 @@
+event_id,gdelt_records,mediacloud_records,gdelt_unique_domains,mediacloud_unique_domains,domain_overlap,url_overlap,normalized_title_overlap,gdelt_url_matches,mediacloud_url_matches,gdelt_title_matches,mediacloud_title_matches,gdelt_url_match_percentage,mediacloud_url_match_percentage
+E005,30,76,17,18,0,0,0,0,0,0,0,0.0,0.0
