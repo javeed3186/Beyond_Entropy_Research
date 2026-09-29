@@ -2,15 +2,17 @@
 
 ## 1. Project Overview
 
-**Research title:** Beyond Entropy: Reliability-Aware Sample Selection for Test-Time Fake News Detection
+**Research Title:** Beyond Entropy: Reliability-Aware Sample Selection for Test-Time Fake News Detection
 
 This project investigates whether **model uncertainty/entropy alone is sufficient for selecting reliable samples during test-time fake news detection**, and whether additional reliability information can improve sample selection for test-time adaptation.
 
-The current work is focused on building and validating the **Phase 1 data-collection pipeline** before moving to annotation, scoring, and model experiments.
+The project is currently transitioning from **Phase 1 data-source feasibility and collection** toward establishing a reliable, reproducible news-data pipeline using **Media Cloud**.
+
+The initial online-news collection experiments were conducted using **GDELT**. However, repeated HTTP 429 rate-limit responses were encountered during multi-event collection. Because reliable large-scale collection is required before proceeding to annotation and model experiments, **Media Cloud is now being investigated as the primary alternative for online-news search and collection**.
 
 ---
 
-## 2. Research Pipeline
+# 2. Research Pipeline
 
 The planned end-to-end workflow is:
 
@@ -42,7 +44,27 @@ Final Evaluation
 Research Paper
 ```
 
-**Important:** Only the Phase 1 feasibility work described below has been completed so far. The later stages are planned, not implemented yet.
+### Present position
+
+The project is currently between:
+
+```text
+Event Selection
+      ↓
+Data Collection
+      ↓
+Data-Source Validation
+      ↓
+Media Cloud Integration  ← CURRENT PHASE
+      ↓
+Reliable Corpus Construction
+      ↓
+Annotation
+      ↓
+Model Experiments
+```
+
+The downstream reliability-scoring and test-time-adaptation experiments have **not yet begun**.
 
 ---
 
@@ -50,76 +72,87 @@ Research Paper
 
 ## Completed
 
-- Research direction and initial methodology defined
-- Initial 10-event pilot created
-- Event metadata structure created
-- GDELT selected and tested for online-news discovery
-- Cebu earthquake pilot successfully retrieved 20 articles
-- Returned articles manually inspected
-- Language-scope issue identified
-- English-only corpus scope selected for the initial study
-- Trafilatura tested for article-text extraction
-- Three text-heavy articles successfully extracted
-- GDELT rate-limit behavior investigated
-- Python virtual environment and basic dependencies configured
+* Research direction and initial methodology defined
+* Initial 10-event pilot created
+* Event metadata structure created
+* GDELT selected and tested as the initial online-news discovery source
+* Cebu earthquake pilot successfully retrieved 20 articles
+* Returned articles manually inspected
+* Language-scope issue identified
+* English-only corpus scope selected for the initial study
+* Trafilatura tested for article-text extraction
+* Three text-heavy articles successfully extracted
+* GDELT rate-limit behavior investigated
+* HTTP 429 issue confirmed during multi-event collection
+* Python virtual environment and basic dependencies configured
+* Media Cloud identified as an alternative online-news search/data source
+* Media Cloud search output downloaded and inspected
+* Initial Media Cloud data is now being evaluated for compatibility with the existing collection pipeline
 
 ## Currently in Progress
 
-- Establishing a reliable and reproducible GDELT collection procedure
-- Completing the 10-event pilot
-- Deciding the final collection strategy before scaling
+* Replacing or adapting the GDELT collection layer with Media Cloud
+* Understanding the Media Cloud search/result structure
+* Mapping Media Cloud fields to the fields required by the existing pipeline
+* Testing Media Cloud event-based collection
+* Validating article relevance and event matching
+* Validating article-text extraction from Media Cloud results
+* Establishing a reproducible collection procedure
+* Completing and validating the 10-event pilot
 
 ## Not Yet Completed
 
-- Full 50–100 event collection
-- Final large-scale corpus
-- Human annotation
-- Krippendorff's alpha analysis
-- ABS model
-- RS model
-- Fake-news detection model
-- Entropy baseline
-- Reliability-aware sample selection
-- Test-time adaptation experiments
-- Ablation studies
-- Final statistical evaluation
+* Final large-scale corpus
+* 50–100 event collection
+* Human annotation
+* Krippendorff's alpha analysis
+* ABS model
+* RS model
+* Fake-news detection model
+* Entropy baseline
+* Reliability-aware sample selection
+* Test-time adaptation experiments
+* Ablation studies
+* Final statistical evaluation
+* Final research paper
 
 ---
 
-# 4. Completed Phase 1 Work
+# 4. Phase 1 — Data Collection and Source Validation
 
-## 4.1 10-Event Pilot
+The first phase of the project focuses on establishing a reliable event-based news collection pipeline.
 
-An initial pilot event list containing 10 events was created.
+The objective is **not simply to collect as many articles as possible**.
 
-The pilot covers different categories:
+The collection pipeline must produce data that is:
 
-- Politics
-- Health
-- Disaster
-- Technology
-- Entertainment
-- Other/control-type events
+* relevant to the selected event
+* associated with a known event ID
+* within the defined collection window
+* sufficiently diverse in source coverage
+* usable for downstream text analysis
+* reproducible
+* traceable to its original URL/source
+
+Only after this pipeline is stable should the project scale to the larger research corpus.
+
+---
+
+# 5. Event-Based Collection Design
+
+The collection is organized around **specific real-world events** rather than unrelated news articles.
 
 Each event contains:
 
-- `event_id`
-- `event_name`
-- `category`
-- `anchor_date`
-- `keywords`
-- `gdelt_query`
-- `notes`
+* `event_id`
+* `event_name`
+* `category`
+* `anchor_date`
+* `keywords`
+* search query
+* notes
 
-The current `event_list.csv` is the source file for the pilot.
-
----
-
-## 4.2 Event-Based Collection Design
-
-The collection is organized around **specific real-world events** instead of collecting unrelated news.
-
-Each event has an anchor date and a seven-day collection window.
+The event-based design allows the study to collect different media coverage surrounding the **same underlying event**.
 
 Example:
 
@@ -128,27 +161,18 @@ Event: 2025 Cebu earthquake
 Event ID: E005
 Category: Disaster
 Anchor date: 2025-09-30
-GDELT query: "Cebu earthquake"
+Search query: "Cebu earthquake"
 ```
 
-The purpose is to obtain different coverage of the **same underlying event** so that later analyses can compare media coverage while controlling for the event itself.
+The event definition is retained with each collected article so that later analysis can compare coverage while preserving event identity.
 
 ---
 
-# 5. GDELT Testing
+# 6. Initial GDELT Investigation
 
-GDELT was selected as the initial online-news discovery source.
+GDELT was the original online-news discovery source used during Phase 1.
 
-The collector retrieves article-level metadata such as:
-
-- headline
-- source/domain
-- date
-- article URL
-
-### First successful pilot
-
-The Cebu earthquake query:
+A Cebu earthquake query:
 
 ```text
 "Cebu earthquake"
@@ -160,188 +184,248 @@ successfully returned:
 20 articles
 ```
 
-These were saved as:
+The results were saved as:
 
 ```text
 data/raw/online/E005_gdelt.json
 ```
 
----
+The returned articles included different types of event coverage, including:
 
-# 6. Evidence: Cebu Earthquake Inspection
+* death-toll updates
+* scientific explanations
+* government response
+* international responses
+* relief efforts
+* human-interest stories
 
-The 20 returned articles were inspected manually.
-
-The results included different types of coverage:
-
-- death-toll updates
-- scientific explanations
-- government response
-- international responses
-- relief efforts
-- human-interest stories
-
-Examples included articles about:
-
-```text
-Death toll in strong Cebu earthquake rises to 72
-What we know so far about the fault that caused the Cebu earthquake
-Marcos orders "tent city" for Cebu quake victims
-Singapore expresses condolences over Philippine quake
-Apps linking quake victims with rescuers and donors
-```
-
-This demonstrated that an event-based GDELT query can produce varied coverage of the same event.
+This demonstrated that event-based online-news discovery was technically feasible.
 
 ---
 
-# 7. Language-Scope Decision
+# 7. GDELT Rate-Limit Problem
 
-The Cebu pilot also exposed a multilingual-data issue.
-
-Some of the 20 returned articles were in Russian.
-
-Because the planned linguistic analysis and initial model development are English-oriented, the current project scope is:
-
-> **Use English-language articles for the initial research corpus.**
-
-Non-English articles will be filtered out of the main corpus and documented as a limitation.
-
----
-
-# 8. Article Text Extraction
-
-GDELT provides article URLs, but later research stages require actual article text.
-
-We tested **Trafilatura** as the article-text extraction method.
-
-Three text-heavy articles were tested:
-
-| Article source | Result |
-|---|---:|
-| Rappler — fault explanation | 6,634 characters |
-| Rappler — death toll report | 1,670 characters |
-| Philstar — tent city report | 1,660 characters |
-
-All three tests successfully returned usable article text.
-
-Therefore, the basic pipeline has been validated:
-
-```text
-GDELT
-  ↓
-Article URL
-  ↓
-Trafilatura
-  ↓
-Article body text
-```
-
----
-
-# 9. GDELT Rate-Limit Investigation
-
-During multi-event collection, GDELT began returning:
+During multi-event collection, GDELT repeatedly returned:
 
 ```text
 HTTP 429
 Too Many Requests
 ```
 
-This is an API rate-limit response.
-
-Several request-spacing strategies were tested:
+Different request-spacing strategies were tested, including:
 
 ```text
 6 seconds
-   ↓
 15 seconds
-   ↓
 30 seconds
 ```
 
 Limited retries were also introduced.
 
-### Latest 10-event run
+Some events eventually succeeded after retrying, while others continued to receive 429 responses or experienced connection timeouts.
 
-The latest run showed:
+### Important methodological rule
 
-```text
-E003 → successful after retry
-E005 → successful after retry
-E007 → successful on first attempt
-E008 → successful on first attempt
-E010 → successful after retry
-```
-
-Several other events continued to receive 429 responses, and one request experienced a connection timeout.
-
-This means:
-
-- GDELT access works
-- valid event queries can return relevant results
-- multi-event collection is currently affected by intermittent throttling
-- reliable large-scale collection has **not yet been established**
-
-This is currently the main Phase 1 technical issue.
-
----
-
-# 10. Important Methodological Decision
-
-We are **not** treating a 429 response as evidence that an event has no news coverage.
-
-A 429 means the request was rate-limited.
-
-Therefore:
+A rate-limit response must never be interpreted as an absence of news coverage.
 
 ```text
 429 ≠ zero articles
 ```
 
-A successful query is required before making a statement about article availability.
+A successful search response is required before making a statement about article availability.
+
+### Current decision
+
+Because the research requires a reproducible collection procedure before scaling to a larger corpus, the project is now investigating **Media Cloud as the replacement/alternative online-news search layer**.
+
+GDELT therefore remains part of the project's **initial feasibility investigation**, but it is no longer the preferred collection path while the Media Cloud pipeline is being evaluated.
 
 ---
 
-# 11. Current Technical Environment
+# 8. Media Cloud — Current Phase
+
+Media Cloud is now being investigated as the next online-news collection source.
+
+The current objective is to determine whether Media Cloud can provide the information required by the downstream research pipeline.
+
+The investigation includes:
+
+```text
+Media Cloud Search
+      ↓
+Search Results
+      ↓
+Article Metadata
+      ↓
+Event Matching
+      ↓
+Article URL
+      ↓
+Article Text Extraction
+      ↓
+Cleaning / Deduplication
+      ↓
+Research Corpus
+```
+
+The initial Media Cloud search data has been downloaded and inspected.
+
+The next task is to establish the mapping between Media Cloud results and the fields currently expected by the project.
+
+---
+
+# 9. Media Cloud Field Validation
+
+The existing downstream pipeline requires article-level information such as:
+
+* event ID
+* article title/headline
+* source/domain
+* publication date
+* article URL
+* search/event information
+* article text where available
+
+The Media Cloud integration will therefore be evaluated based on whether these fields can be obtained consistently.
+
+The integration should use a normalization layer rather than tightly coupling the rest of the project to Media Cloud's raw response format.
+
+Conceptually:
+
+```text
+Media Cloud Response
+        ↓
+Normalization Layer
+        ↓
+Standard Article Record
+        ↓
+Existing Research Pipeline
+```
+
+This makes it possible to change the news source later without rewriting the entire research system.
+
+---
+
+# 10. Language Scope
+
+The Cebu pilot exposed a multilingual-data issue.
+
+Some returned articles were not in English.
+
+Because the initial linguistic analysis and model development are English-oriented, the current corpus scope is:
+
+> **English-language articles for the initial research study.**
+
+Non-English articles will be filtered from the primary corpus and documented as a dataset limitation.
+
+Language filtering should occur during the data-cleaning stage rather than silently discarding records without documentation.
+
+---
+
+# 11. Article Text Extraction
+
+The research requires article text for later linguistic and reliability analysis.
+
+**Trafilatura** was tested as the initial article-text extraction method.
+
+Three text-heavy articles were successfully extracted during the GDELT pilot:
+
+| Article source              | Extracted characters |
+| --------------------------- | -------------------: |
+| Rappler — fault explanation |                6,634 |
+| Rappler — death toll report |                1,670 |
+| Philstar — tent city report |                1,660 |
+
+The basic extraction pipeline has therefore been demonstrated:
+
+```text
+News Search
+    ↓
+Article URL
+    ↓
+Article Page
+    ↓
+Trafilatura
+    ↓
+Article Body Text
+```
+
+However, extraction success must still be validated across a larger and more diverse set of sources before the pipeline is considered production-ready.
+
+---
+
+# 12. Data Cleaning Requirements
+
+Before the corpus is used for annotation or modeling, the collection pipeline must handle:
+
+### Language filtering
+
+Keep the initial research corpus English-only.
+
+### Duplicate removal
+
+Multiple search results may point to the same article or syndicated content.
+
+### Event matching
+
+Articles must actually relate to the target event.
+
+### Date validation
+
+Articles must fall within the defined collection window.
+
+### URL validation
+
+The original article URL should be preserved.
+
+### Source tracking
+
+The publication/source domain should be retained.
+
+### Extraction validation
+
+Articles with missing or unusable text should be recorded rather than silently removed.
+
+---
+
+# 13. Standard Article Record
+
+Regardless of whether the article originates from GDELT, Media Cloud, or another source, the project should normalize it into a common structure.
+
+A target structure is:
+
+```text
+event_id
+event_name
+title
+source
+domain
+publication_date
+url
+language
+query
+article_text
+collection_source
+collection_timestamp
+```
+
+This provides a stable interface for the downstream research pipeline.
+
+---
+
+# 14. Current Technical Environment
 
 The project is being developed locally using VS Code.
 
-Current project location during development:
-
-```text
-D:\Beyond_Entropy_Research
-```
-
-A Python virtual environment was created using Python 3.14:
-
-```powershell
-py -3.14 -m venv venv
-```
-
-The environment was activated with:
-
-```powershell
-.\venv\Scripts\Activate.ps1
-```
-
-Python was verified:
-
-```powershell
-python --version
-```
-
-Expected development version used so far:
+Development environment:
 
 ```text
 Python 3.14.7
 ```
 
----
+A Python virtual environment is used for the project.
 
-# 12. Installed Packages
-
-The current basic environment successfully installed:
+The basic environment has been configured with packages including:
 
 ```text
 requests
@@ -353,27 +437,14 @@ certifi
 urllib3
 idna
 charset_normalizer
-six
 trafilatura
-```
-
-The basic installation was verified with:
-
-```powershell
-python -c "import requests, pandas; print('All packages OK')"
-```
-
-Output:
-
-```text
-All packages OK
 ```
 
 ---
 
-# 13. Current Scripts
+# 15. Current Scripts
 
-The project has used the following scripts during Phase 1:
+The project has used the following Phase 1 scripts:
 
 ```text
 collect_gdelt.py
@@ -382,351 +453,152 @@ test_extraction.py
 inspect_gdelt.py
 ```
 
-### `collect_gdelt.py`
+These scripts were primarily created for the GDELT feasibility stage.
 
-Main GDELT pilot collector.
+As the project transitions to Media Cloud, the collection layer should be reorganized so that the news-source implementation is separated from the common data-processing pipeline.
 
-Purpose:
-
-- read the event list
-- query GDELT
-- use event dates and queries
-- save successful GDELT responses
-- handle 429 responses
-- handle request failures without stopping the entire run
-
-### `test_gdelt.py`
-
-Used for isolated GDELT API testing.
-
-Purpose:
-
-- check whether the API is responding
-- inspect HTTP status
-- test a single query
-
-### `test_extraction.py`
-
-Used to test article-text extraction.
-
-Purpose:
-
-- download article pages
-- extract article text using Trafilatura
-- report extracted character count
-- show the beginning of extracted text
-
-### `inspect_gdelt.py`
-
-Used to inspect saved GDELT results.
-
-Purpose:
-
-- count returned articles
-- display titles
-- display source domains
-- display dates
-- display URLs
-
----
-
-# 14. Important Commands Used
-
-## Navigate to project
-
-```powershell
-cd D:\Beyond_Entropy_Research
-```
-
-## Create virtual environment
-
-```powershell
-py -3.14 -m venv venv
-```
-
-## Activate environment
-
-```powershell
-.\venv\Scripts\Activate.ps1
-```
-
-## Check Python
-
-```powershell
-python --version
-```
-
-## Check which Python is being used
-
-```powershell
-where.exe python
-```
-
-## Install packages
-
-```powershell
-python -m pip install requests pandas
-```
-
-For article extraction:
-
-```powershell
-python -m pip install trafilatura
-```
-
-## Test imports
-
-```powershell
-python -c "import requests, pandas; print('All packages OK')"
-```
-
-## Run GDELT collector
-
-```powershell
-python collect_gdelt.py
-```
-
-## Run GDELT test
-
-```powershell
-python test_gdelt.py
-```
-
-## Run extraction test
-
-```powershell
-python test_extraction.py
-```
-
-## Inspect saved GDELT data
-
-```powershell
-python inspect_gdelt.py
-```
-
----
-
-# 15. Current Folder Structure
-
-The project should eventually follow a structure similar to:
+A future structure may look like:
 
 ```text
-Beyond_Entropy_Research/
-│
-├── README.md
-├── event_list.csv
-│
-├── collect_gdelt.py
-├── test_gdelt.py
-├── test_extraction.py
-├── inspect_gdelt.py
-│
-├── data/
-│   └── raw/
-│       ├── online/
-│       │   └── E005_gdelt.json
-│       │
-│       └── social/
-│
-├── docs/
-│   └── research_progress.md
-│
-└── venv/
+collect_mediacloud.py
+normalize_articles.py
+clean_articles.py
+extract_article_text.py
+validate_collection.py
 ```
 
-### Do NOT push `venv/` to GitHub.
-
-It is a local Python environment and should be recreated by each teammate.
+The exact structure will be finalized after the Media Cloud integration is tested.
 
 ---
 
-# 16. GitHub Setup
+# 16. Current Project Architecture
 
-The repository should contain the research source code and documentation, but not the local virtual environment.
+The intended architecture is:
 
-Create a `.gitignore` file containing:
-
-```gitignore
-# Python
-venv/
-__pycache__/
-*.py[cod]
-
-# Environment / secrets
-.env
-.env.*
-!.env.example
-
-# IDE
-.vscode/
-
-# Temporary files
-*.tmp
-*.log
-
-# OS
-.DS_Store
-Thumbs.db
+```text
+                ┌───────────────┐
+                │ Event List    │
+                └───────┬───────┘
+                        ↓
+              ┌───────────────────┐
+              │ News Source Layer │
+              │                   │
+              │ Media Cloud       │
+              │ GDELT (legacy)    │
+              └─────────┬─────────┘
+                        ↓
+              ┌───────────────────┐
+              │ Normalization     │
+              └─────────┬─────────┘
+                        ↓
+              ┌───────────────────┐
+              │ Cleaning          │
+              │ Deduplication     │
+              │ Event Matching    │
+              │ Language Filter   │
+              └─────────┬─────────┘
+                        ↓
+              ┌───────────────────┐
+              │ Article Text      │
+              │ Extraction        │
+              └─────────┬─────────┘
+                        ↓
+              ┌───────────────────┐
+              │ Research Corpus   │
+              └─────────┬─────────┘
+                        ↓
+              ┌───────────────────┐
+              │ Human Annotation  │
+              └─────────┬─────────┘
+                        ↓
+              ┌───────────────────┐
+              │ ABS / RS          │
+              └─────────┬─────────┘
+                        ↓
+              ┌───────────────────┐
+              │ Fake-News Model   │
+              └─────────┬─────────┘
+                        ↓
+              ┌───────────────────┐
+              │ Entropy vs        │
+              │ Reliability       │
+              │ Selection         │
+              └───────────────────┘
 ```
-
-If `.vscode/` contains useful shared project configuration, it can be selectively added later. Do not commit personal machine-specific settings or secrets.
 
 ---
 
-# 17. Recommended Git Workflow
+# 17. Immediate Next Steps
 
-From the project directory:
+## Step 1 — Complete Media Cloud integration
 
-```powershell
-git init
-```
+Determine:
 
-Add files:
-
-```powershell
-git add .
-```
-
-Check what will be committed:
-
-```powershell
-git status
-```
-
-Create the first commit:
-
-```powershell
-git commit -m "Initial research Phase 1 pipeline"
-```
-
-Then connect the GitHub repository:
-
-```powershell
-git remote add origin YOUR_GITHUB_REPOSITORY_URL
-```
-
-Rename the branch:
-
-```powershell
-git branch -M main
-```
-
-Push:
-
-```powershell
-git push -u origin main
-```
-
-**Replace `YOUR_GITHUB_REPOSITORY_URL` with the actual repository URL. Do not commit API keys or credentials.**
+* how searches are performed
+* what fields are returned
+* how article URLs are represented
+* how dates are represented
+* how sources/domains are represented
+* how search results are paginated
+* what limits exist
+* how reproducible the search process is
 
 ---
 
-# 18. How a Teammate Can Continue the Project
+## Step 2 — Build a normalized article format
 
-After cloning the repository:
+Convert Media Cloud output into the project's standard article record.
 
-```powershell
-git clone YOUR_GITHUB_REPOSITORY_URL
-cd Beyond_Entropy_Research
-```
-
-Create their own environment:
-
-```powershell
-py -3.14 -m venv venv
-```
-
-Activate it:
-
-```powershell
-.\venv\Scripts\Activate.ps1
-```
-
-Install dependencies:
-
-```powershell
-python -m pip install requests pandas trafilatura
-```
-
-Then inspect the repository:
-
-```powershell
-dir
-```
-
-Run the appropriate Phase 1 script:
-
-```powershell
-python collect_gdelt.py
-```
-
-The teammate should read this README before modifying the collector.
+Do not make the downstream research code depend directly on Media Cloud's raw schema.
 
 ---
 
-# 19. Data Integrity Rules
+## Step 3 — Re-run the 10-event pilot
 
-These rules should be followed as the project grows.
-
-### Do not manually invent article counts
-
-Only record an article count after a successful API response.
-
-### Do not treat HTTP 429 as zero results
-
-A 429 is an access/rate-limit issue.
-
-### Keep raw data
-
-Successful raw API responses should be retained for reproducibility.
-
-### Keep the original URL
-
-Every article record should preserve its source URL.
-
-### Keep event identity
-
-Every collected article must remain associated with its event ID.
-
-### Keep collection dates and query information
-
-This will help document how the dataset was constructed.
-
-### Do not silently change the event definition
-
-If an event's anchor date or query changes, document the change.
-
----
-
-# 20. Planned Work — Next Steps
-
-## Step 1 — Finish Phase 1 pilot
-
-First establish a reliable way to collect the 10 pilot events.
-
-The immediate problem is the GDELT rate limiting.
-
-Do not scale to 100 events until the pilot collection process is stable.
-
----
-
-## Step 2 — Validate all pilot data
+Use the same event definitions where possible.
 
 For each event:
 
-- verify relevance
-- filter non-English results
-- inspect duplicates
-- check publication dates
-- retrieve article text
-- record extraction failures
-- check source diversity
+```text
+Search
+ ↓
+Collect
+ ↓
+Normalize
+ ↓
+Filter English
+ ↓
+Remove duplicates
+ ↓
+Validate event relevance
+ ↓
+Extract text
+ ↓
+Store raw + cleaned data
+```
 
 ---
 
-## Step 3 — Expand the event set
+## Step 4 — Validate the pilot
 
-After the pilot:
+Measure:
+
+* number of search results
+* relevant article count
+* English article count
+* duplicate count
+* text-extraction success rate
+* source diversity
+* date-window compliance
+* failed URLs
+
+This will provide evidence for whether the Media Cloud pipeline is suitable for scaling.
+
+---
+
+## Step 5 — Only then scale
+
+The intended progression remains:
 
 ```text
 10 events
@@ -736,220 +608,105 @@ After the pilot:
 50–100 events
 ```
 
-The eventual target is a corpus of several thousand usable items.
+Scaling should happen only after the 10-event pipeline is reproducible.
 
 ---
 
-## Step 4 — Add other modalities
+# 18. Future Research Stages
 
-The original research design includes:
+Once the corpus is stable:
+
+### Human Annotation
+
+Develop the annotation codebook and annotate a representative subset using multiple annotators.
+
+### Inter-Annotator Agreement
+
+Measure agreement using appropriate statistical methods, including Krippendorff's alpha where applicable.
+
+### ABS
+
+Develop and validate the planned reliability-related score.
+
+### RS
+
+Develop and validate the reasoning/source-related score.
+
+### Statistical Analysis
+
+Study relationships among:
+
+* ABS
+* RS
+* engagement
+* medium
+* topic
+* event
+
+### Fake-News Detection Baseline
+
+Develop and evaluate the base fake-news detection model.
+
+### Entropy Baseline
+
+Implement entropy-based sample selection for test-time adaptation.
+
+### Reliability-Aware Selection
+
+Introduce reliability information into the sample-selection strategy.
+
+### Ablation
+
+Remove individual reliability components to determine their contribution.
+
+### Robustness
+
+Evaluate whether findings remain stable under alternative settings and held-out data.
+
+---
+
+# 19. What Has NOT Been Demonstrated Yet
+
+The following are still hypotheses or future experiments:
+
+* that Media Cloud is superior to GDELT
+* that the final corpus will contain a particular number of usable articles
+* that ABS is predictive
+* that RS is predictive
+* that entropy is insufficient
+* that reliability-aware selection improves test-time adaptation
+* that the proposed method outperforms entropy-based selection
+
+These claims should **not** be made until supported by experimental evidence.
+
+---
+
+# 20. Present Research Status
+
+> **The project has completed the initial data-collection feasibility stage using GDELT and has identified intermittent HTTP 429 rate limiting as a major obstacle to reliable multi-event collection. The current phase is therefore focused on integrating and validating Media Cloud as an alternative online-news search source, while preserving a standardized article format and the existing downstream research architecture. The immediate objective is to complete and validate the 10-event pilot before scaling the corpus and proceeding to annotation, reliability scoring, and test-time adaptation experiments.**
+
+---
+
+# 21. Current Priority
+
+The immediate priority is:
 
 ```text
-Social
-Online/Print
-TV
+Media Cloud
+     ↓
+10-event pilot
+     ↓
+Normalization
+     ↓
+Cleaning
+     ↓
+Event matching
+     ↓
+Article extraction
+     ↓
+Validation
+     ↓
+Stable corpus
 ```
 
-The availability and coverage of each modality must be tested rather than assumed.
-
----
-
-## Step 5 — Human Annotation
-
-Create an annotation codebook for the reliability-related dimensions.
-
-A representative subset will be annotated by multiple annotators.
-
-Inter-annotator agreement will then be measured.
-
----
-
-## Step 6 — Develop ABS and RS
-
-The planned research pipeline contains:
-
-**ABS — a score intended to capture aspects such as sensationalism/framing/structural distortion**
-
-and
-
-**RS — a reasoning-related score based on linguistic/source-related features.**
-
-The exact operational definitions and feature construction must be finalized and validated against annotated data.
-
----
-
-## Step 7 — Statistical Analysis
-
-Investigate relationships between:
-
-- ABS
-- RS
-- engagement
-- medium
-- topic
-- event
-
-Use appropriate statistical methods and report effect sizes, not only p-values.
-
----
-
-## Step 8 — Fake-News Detection Baseline
-
-Build and evaluate the base fake-news detection model.
-
----
-
-## Step 9 — Entropy Baseline
-
-Implement an entropy-based test-time sample-selection strategy.
-
-Conceptually:
-
-```text
-Input sample
-     ↓
-Fake-news model
-     ↓
-Prediction probabilities
-     ↓
-Entropy
-     ↓
-Select low/high uncertainty samples according to the defined baseline
-     ↓
-Test-time adaptation
-```
-
-The exact selection rule will be finalized based on the experimental design and literature.
-
----
-
-## Step 10 — Proposed Reliability-Aware Selection
-
-Compare the entropy baseline with a method that incorporates reliability information.
-
-Conceptually:
-
-```text
-Input sample
-     ↓
-Fake-news model
-     ↓
-Prediction uncertainty
-     +
-Reliability information
-     ↓
-Sample selection
-     ↓
-Test-time adaptation
-     ↓
-Evaluation
-```
-
----
-
-## Step 11 — Ablation Studies
-
-Remove individual reliability components and repeat the experiment.
-
-This will help determine which components actually contribute to the final result.
-
----
-
-## Step 12 — Robustness and Final Evaluation
-
-Use held-out evaluation data and test whether the findings remain stable under alternative settings.
-
-Finally:
-
-```text
-Results
-  ↓
-Analysis
-  ↓
-Discussion
-  ↓
-Limitations
-  ↓
-Conclusion
-  ↓
-Research Paper
-```
-
----
-
-# 21. Evidence Summary
-
-The strongest evidence completed so far is:
-
-### Evidence 1 — Event dataset
-
-A 10-event `event_list.csv` was created.
-
-### Evidence 2 — GDELT retrieval
-
-The E005 Cebu earthquake query successfully returned **20 articles**.
-
-### Evidence 3 — Article diversity
-
-The 20 articles contained different coverage types and multiple source domains.
-
-### Evidence 4 — Text extraction
-
-Three real news articles were successfully processed with Trafilatura:
-
-```text
-6,634 characters
-1,670 characters
-1,660 characters
-```
-
-### Evidence 5 — Rate-limit diagnosis
-
-Repeated HTTP 429 responses were observed during multi-event collection, and different request intervals were tested.
-
-### Evidence 6 — Partial successful multi-event collection
-
-Five events in the latest 10-event run eventually produced successful results, while other requests remained rate-limited or timed out.
-
----
-
-# 22. Important Boundary: What We Have NOT Claimed
-
-We have **not** yet demonstrated:
-
-- that 50–100 events can be collected reliably
-- that the final corpus will contain 3,000–5,000 usable articles
-- that ABS is predictive
-- that RS is predictive
-- that ABS and RS are independent/weakly correlated
-- that entropy is insufficient
-- that reliability-aware selection improves test-time adaptation
-- that the proposed method beats an entropy baseline
-
-Those are **research hypotheses and planned experiments**, not completed findings.
-
-This distinction must be maintained in the final paper.
-
----
-
-# 23. One-Line Project Status
-
-> **We have completed the initial Phase 1 feasibility work: the 10-event event-based dataset structure is established, GDELT online-news discovery has been validated with real results, article-text extraction using Trafilatura has been successfully tested across multiple outlets, and the main remaining Phase 1 issue is establishing a reliable collection strategy under GDELT's rate limits.**
-
----
-
-## For New Team Members
-
-Start with these files:
-
-```text
-README.md
-event_list.csv
-collect_gdelt.py
-test_extraction.py
-inspect_gdelt.py
-```
-
-Then read the **Completed Work**, **Evidence Summary**, and **Planned Work** sections above.
-
-Do not start implementing ABS, RS, entropy, or test-time adaptation yet unless the team agrees that the Phase 1 dataset is sufficiently stable.
+**Do not move to ABS, RS, entropy, or test-time adaptation experiments until the data pipeline is sufficiently stable.**
