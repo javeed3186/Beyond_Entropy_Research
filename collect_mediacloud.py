@@ -273,30 +273,107 @@ def collect_event(
     print("\nRequesting Media Cloud stories...")
 
     # --------------------------------------------------------
-    # IMPORTANT FIX
+    # Media Cloud API request with explicit rate-limit handling
     # --------------------------------------------------------
-    #
-    # Explicitly pass:
-    #   collection_ids=[1]
-    #   platform="onlinenews-mediacloud"
-    #
-    # We do NOT rely on the environment variable being interpreted
-    # correctly inside the API call.
-    #
-    stories = mc_search.story_sample(
-        query=query,
-        start_date=start_date,
-        end_date=end_date,
-        collection_ids=collection_ids,
-        source_ids=[],
-        platform=PLATFORM,
-        limit=MAX_RECORDS,
-        expanded=False,
-    )
 
-    print(
-        f"Stories returned: {len(stories)}"
-    )
+    MAX_RETRIES = 3
+    BASE_BACKOFF_SECONDS = 30
+
+    stories = None
+
+    for attempt in range(1, MAX_RETRIES + 1):
+
+        try:
+
+            stories = mc_search.story_sample(
+                query=query,
+                start_date=start_date,
+                end_date=end_date,
+                collection_ids=collection_ids,
+                source_ids=[],
+                platform=PLATFORM,
+                limit=MAX_RECORDS,
+                expanded=False,
+            )
+
+            # The API actually responded successfully.
+            print(
+                f"Stories returned: {len(stories)}"
+            )
+
+            break
+
+        except mediacloud.error.APIResponseError as exc:
+
+            # Media Cloud exposes the HTTP response status through
+            # the exception object. Treat 429 differently from all
+            # other API failures.
+            response = getattr(exc, "response", None)
+            status_code = getattr(response, "status_code", None)
+
+            if status_code == 429:
+
+                if attempt >= MAX_RETRIES:
+
+                    print(
+                        "\nRATE LIMITED: Media Cloud returned HTTP 429 "
+                        f"after {MAX_RETRIES} attempts."
+                    )
+
+                    raise RuntimeError(
+                        f"{event_id}: Media Cloud rate limit "
+                        f"persisted after {MAX_RETRIES} attempts."
+                    ) from exc
+
+                wait_seconds = BASE_BACKOFF_SECONDS * attempt
+
+                print(
+                    "\nRATE LIMITED: Media Cloud returned HTTP 429."
+                )
+
+                print(
+                    f"Retry {attempt}/{MAX_RETRIES - 1} "
+                    f"after {wait_seconds} seconds..."
+                )
+
+                time.sleep(wait_seconds)
+
+                continue
+
+            # Any non-429 API error is a real API failure.
+            print(
+                "\nMEDIA CLOUD API ERROR:"
+            )
+
+            print(
+                str(exc)
+            )
+
+            raise RuntimeError(
+                f"{event_id}: Media Cloud API request failed."
+            ) from exc
+
+        except Exception as exc:
+
+            print(
+                "\nMEDIA CLOUD REQUEST FAILED:"
+            )
+
+            print(
+                f"{type(exc).__name__}: {exc}"
+            )
+
+            raise
+
+    # --------------------------------------------------------
+    # Process only a successful API response
+    # --------------------------------------------------------
+
+    if stories is None:
+
+        raise RuntimeError(
+            f"{event_id}: Media Cloud request did not return a result."
+        )
 
     cleaned = [
         clean_story(
@@ -336,8 +413,11 @@ def collect_event(
 
     else:
 
+        # This message is now meaningful: we only reach this point
+        # after Media Cloud successfully returned HTTP 200.
         print(
-            "\nWARNING: Media Cloud returned zero stories."
+            "\nVALID ZERO RESULT: Media Cloud successfully returned "
+            "zero stories for this query."
         )
 
     return cleaned
