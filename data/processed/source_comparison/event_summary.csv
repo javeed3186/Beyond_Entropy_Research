@@ -1,0 +1,11 @@
+event_id,collection_status,status_note,gdelt_file_present,mediacloud_file_present,gdelt_records,mediacloud_records,gdelt_hit_request_limit,mediacloud_hit_request_limit,gdelt_unique_domains,mediacloud_unique_domains,shared_domain_count,url_overlap_count
+E001,GDELT_CAP,,True,True,200,110,True,False,190,25,4,3
+E002,GDELT_CAP,,True,True,200,68,True,False,53,18,1,1
+E003,MEDIACLOUD_CAP,,True,True,20,200,False,True,16,35,2,3
+E004,TESTED_ZERO_RESULT,Classification refers only to the tested Media Cloud query/window; it is not evidence of total real-world event coverage.,False,True,0,0,False,False,0,0,0,0
+E005,NORMAL,,True,True,30,76,False,False,17,18,0,0
+E006,NORMAL,,True,True,135,78,False,False,101,29,11,19
+E007,NORMAL,,True,True,20,20,False,False,15,12,0,0
+E008,GDELT_CAP,,True,True,200,29,True,False,115,24,5,5
+E009,BOTH_CAP,,True,True,200,200,True,True,148,35,6,7
+E010,NORMAL,,True,True,20,23,False,False,16,18,0,0

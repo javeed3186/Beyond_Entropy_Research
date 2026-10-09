@@ -1,0 +1,36 @@
+event_id,source,collection_status,status_note,source_file_present,total_records,language,language_records
+E001,GDELT,GDELT_CAP,,True,200,English,200
+E001,Media Cloud,GDELT_CAP,,True,110,en,110
+E002,GDELT,GDELT_CAP,,True,200,Bengali,1
+E002,GDELT,GDELT_CAP,,True,200,English,193
+E002,GDELT,GDELT_CAP,,True,200,Hindi,2
+E002,GDELT,GDELT_CAP,,True,200,Marathi,3
+E002,GDELT,GDELT_CAP,,True,200,Telugu,1
+E002,Media Cloud,GDELT_CAP,,True,68,en,68
+E003,GDELT,MEDIACLOUD_CAP,,True,20,English,10
+E003,GDELT,MEDIACLOUD_CAP,,True,20,French,7
+E003,GDELT,MEDIACLOUD_CAP,,True,20,Spanish,3
+E003,Media Cloud,MEDIACLOUD_CAP,,True,200,en,200
+E004,GDELT,TESTED_ZERO_RESULT,Classification refers only to the tested Media Cloud query/window; it is not evidence of total real-world event coverage.,False,0,NO_LANGUAGE_RECORDED,0
+E004,Media Cloud,TESTED_ZERO_RESULT,Classification refers only to the tested Media Cloud query/window; it is not evidence of total real-world event coverage.,True,0,NO_LANGUAGE_RECORDED,0
+E005,GDELT,NORMAL,,True,30,English,26
+E005,GDELT,NORMAL,,True,30,Japanese,1
+E005,GDELT,NORMAL,,True,30,Russian,3
+E005,Media Cloud,NORMAL,,True,76,en,76
+E006,GDELT,NORMAL,,True,135,Arabic,3
+E006,GDELT,NORMAL,,True,135,English,132
+E006,Media Cloud,NORMAL,,True,78,en,78
+E007,GDELT,NORMAL,,True,20,English,20
+E007,Media Cloud,NORMAL,,True,20,en,20
+E008,GDELT,GDELT_CAP,,True,200,English,200
+E008,Media Cloud,GDELT_CAP,,True,29,en,23
+E008,Media Cloud,GDELT_CAP,,True,29,es,6
+E009,GDELT,BOTH_CAP,,True,200,English,168
+E009,GDELT,BOTH_CAP,,True,200,Japanese,2
+E009,GDELT,BOTH_CAP,,True,200,Spanish,30
+E009,Media Cloud,BOTH_CAP,,True,200,en,167
+E009,Media Cloud,BOTH_CAP,,True,200,es,32
+E009,Media Cloud,BOTH_CAP,,True,200,se,1
+E010,GDELT,NORMAL,,True,20,English,20
+E010,Media Cloud,NORMAL,,True,23,en,18
+E010,Media Cloud,NORMAL,,True,23,es,5

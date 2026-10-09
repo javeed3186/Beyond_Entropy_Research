@@ -1,0 +1,11 @@
+event,gdelt_records,mediacloud_records,gdelt_domains,mediacloud_domains,url_overlap,domain_overlap,gdelt_duplicate_urls,mediacloud_duplicate_urls,gdelt_date_min,gdelt_date_max,mediacloud_date_min,mediacloud_date_max,gdelt_languages,mediacloud_languages,gdelt_hit_200,mediacloud_hit_200,mediacloud_error_file,mediacloud_csv_exists,gdelt_json_exists
+E001,200,110,190,25,3,4,0,0,20251112T011500Z,20251118T160000Z,2025-11-12,2025-11-19,English,en,True,False,True,True,True
+E002,200,68,53,18,1,1,0,0,20251110T141500Z,20251117T000000Z,2025-11-10,2025-11-16,"Bengali,English,Hindi,Marathi,Telugu",en,True,False,True,True,True
+E003,20,200,16,35,3,2,0,0,20260516T003000Z,20260516T220000Z,2026-05-16,2026-05-23,"English,French,Spanish",en,False,True,True,True,True
+E004,0,0,0,0,0,0,0,0,,,,,,,False,False,True,True,False
+E005,30,76,17,18,0,0,0,0,20250930T171500Z,20251006T104500Z,2025-09-30,2025-10-03,"English,Japanese,Russian",en,False,False,False,True,True
+E006,135,78,101,29,19,11,0,0,20260727T060000Z,20260802T200000Z,2026-07-27,2026-08-03,"Arabic,English",en,False,False,True,True,True
+E007,20,20,16,12,0,0,0,0,20260106T000000Z,20260112T130000Z,2026-01-06,2026-01-09,English,en,False,False,True,True,True
+E008,200,29,115,24,5,5,0,0,20260519T181500Z,20260525T121500Z,2026-05-19,2026-05-26,English,"en,es",True,False,True,True,True
+E009,200,200,148,35,7,6,0,0,20260315T041500Z,20260322T000000Z,2026-03-15,2026-03-18,"English,Japanese,Spanish","en,es,se",True,True,True,True,True
+E010,20,23,16,18,0,0,0,0,20260325T041500Z,20260330T100000Z,2026-03-25,2026-04-01,English,"en,es",False,False,True,True,True
