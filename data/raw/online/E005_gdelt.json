@@ -199,6 +199,106 @@
       "domain": "rappler.com",
       "language": "English",
       "sourcecountry": "Philippines"
+    },
+    {
+      "url": "https://time.com/7322543/philippines-earthquake-cebu-why-so-deadly-night-manila-big-one/",
+      "url_mobile": "",
+      "title": "Why the Philippine Earthquake Was So Deadly",
+      "seendate": "20251002T110000Z",
+      "socialimage": "https://api.time.com/wp-content/uploads/2025/10/quake-philippines.jpg?quality=85&crop=1",
+      "domain": "time.com",
+      "language": "English",
+      "sourcecountry": "United States"
+    },
+    {
+      "url": "https://www.thestar.com.my/aseanplus/aseanplus-news/2025/10/03/asean-news-headlines-at-10pm-on-thursday-oct-2-2025",
+      "url_mobile": "",
+      "title": "Asean News Headlines at 10pm on Thursday ( Oct 2 , 2025 ) ",
+      "seendate": "20251002T184500Z",
+      "socialimage": "https://apicms.thestar.com.my/uploads/images/2025/10/03/3551721.jpg",
+      "domain": "thestar.com.my",
+      "language": "English",
+      "sourcecountry": "Malaysia"
+    },
+    {
+      "url": "https://www.philstar.com/headlines/2025/10/01/2476745/firefighter-coast-guard-personnel-killed-during-cebu-quake",
+      "url_mobile": "https://www.philstar.com/headlines/2025/10/01/2476745/firefighter-coast-guard-personnel-killed-during-cebu-quake/amp/",
+      "title": "Firefighter , coast guard personnel killed during Cebu quake",
+      "seendate": "20251001T101500Z",
+      "socialimage": "https://media.philstar.com/photos/2025/10/01/rgeygeh-2_2025-10-01_16-04-20.jpg",
+      "domain": "philstar.com",
+      "language": "English",
+      "sourcecountry": "Philippines"
+    },
+    {
+      "url": "https://www.chunichi.co.jp:443/article/1142167",
+      "url_mobile": "",
+      "title": "\u6bd4\u30bb\u30d6\u6c96\u5730\u9707\u306e\u6b7b\u8005\uff17\uff12\u4eba\u306b \u8907\u6570\u81ea\u6cbb\u4f53\u3067\u4e0d\u660e\u8005\u306e\u635c\u7d22\u7d42\u4e86 \uff1a \u4e2d\u65e5\u65b0\u805eWeb",
+      "seendate": "20251002T051500Z",
+      "socialimage": "https://static.chunichi.co.jp/image/article/size1/0/1/6/6/01665576d08fa460294c07397d74fa2c_1.jpg",
+      "domain": "chunichi.co.jp",
+      "language": "Japanese",
+      "sourcecountry": "Japan"
+    },
+    {
+      "url": "https://www.bbc.com/news/articles/c80g9ng3ed4o",
+      "url_mobile": "https://www.bbc.com/news/articles/c80g9ng3ed4o.amp",
+      "title": "Philippines earthquake : Scared survivors sleep in fields as death toll rises",
+      "seendate": "20251003T003000Z",
+      "socialimage": "https://ichef.bbci.co.uk/news/1024/branded_news/7799/live/bbb0b5d0-9f6c-11f0-92db-77261a15b9d2.jpg",
+      "domain": "bbc.com",
+      "language": "English",
+      "sourcecountry": "United Kingdom"
+    },
+    {
+      "url": "https://www.newsweek.com/philippines-hit-by-at-least-6-aftershocks-after-deadly-6-9-earthquake-10811534",
+      "url_mobile": "",
+      "title": "Philippines hit by at least 6 aftershocks after deadly 6 . 9 earthquake",
+      "seendate": "20251001T164500Z",
+      "socialimage": "https://assets.newsweek.com/wp-content/uploads/2025/10/AP25274366834504.jpg?crop=1",
+      "domain": "newsweek.com",
+      "language": "English",
+      "sourcecountry": "United States"
+    },
+    {
+      "url": "https://www.sunstar.com.ph/cebu/capitol-centralizes-quake-aid-delivery",
+      "url_mobile": "https://www.sunstar.com.ph/amp/story/cebu/capitol-centralizes-quake-aid-delivery",
+      "title": "Cebu Capitol Fights  Traffic Disaster  with New Aid Hubs , ",
+      "seendate": "20251005T141500Z",
+      "socialimage": "https://media.assettype.com/sunstar%2F2025-10-05%2Fj9kyk2h6%2Fp1.jpg?rect=0%2C0%2C750%2C394&ar=40%3A21&auto=format%2Ccompress&ogImage=true&mode=crop&enlarge=true&overlay=false&overlay_position=bottom&overlay_width=100",
+      "domain": "sunstar.com.ph",
+      "language": "English",
+      "sourcecountry": "Philippines"
+    },
+    {
+      "url": "https://www.lbc.co.uk/article/meghans-father-insists-safe-philippine-earthquake-5HjdDqX_2/",
+      "url_mobile": "",
+      "title": "Meghan father insists he  safe  following claims he is  trapped and unable to walk  after Philippines earthquake",
+      "seendate": "20251002T073000Z",
+      "socialimage": "https://images.globalplayer.com/images/758506?crop=16_9&signature=aslbia0PY7a-BITXZlfUdkRhMjg=",
+      "domain": "lbc.co.uk",
+      "language": "English",
+      "sourcecountry": "United Kingdom"
+    },
+    {
+      "url": "https://www.rappler.com/philippines/visayas/tragedy-malinao-family-bogo-city-earthquake/",
+      "url_mobile": "",
+      "title": "Cebu earthquake : Tragedy at 9 : 59 pm",
+      "seendate": "20251004T051500Z",
+      "socialimage": "https://www.rappler.com/tachyon/2025/10/Malinao-Binabag-Bogo-City-October520251-scaled.jpeg",
+      "domain": "rappler.com",
+      "language": "English",
+      "sourcecountry": "Philippines"
+    },
+    {
+      "url": "https://www.philstar.com/headlines/2025/10/04/2477394/crisis-cebu-no-water-electricity-shelter",
+      "url_mobile": "https://www.philstar.com/headlines/2025/10/04/2477394/crisis-cebu-no-water-electricity-shelter/amp/",
+      "title": "Crisis in Cebu : No water , electricity , shelter",
+      "seendate": "20251003T173000Z",
+      "socialimage": "https://media.philstar.com/photos/2025/10/03/5_2025-10-03_22-43-13.jpg",
+      "domain": "philstar.com",
+      "language": "English",
+      "sourcecountry": "Philippines"
     }
   ]
 }

@@ -14,14 +14,14 @@
 
 ## Current
 
-- Making Phase 1 collection reliable enough to scale beyond the pilot.
+- Designing the final event sample. A 12-month framework and 60 candidate leads across six categories are drafted; event-source confirmation and social/TV provider feasibility remain pending.
 
 ## Planned
 
-1. Complete and validate the 10-event pilot.
-2. Clean, deduplicate, and extract text.
-3. Expand to 25 and then 50–100 events.
-4. Add/validate other modalities.
+1. Verify the 60 candidate leads against primary or independent established sources.
+2. Choose social-media and TV providers, then preflight event availability across modalities.
+3. Select the final 50–100 events using the documented stratified procedure.
+4. Freeze collection and matching rules; collect, clean, deduplicate, and extract the corpus.
 5. Human annotation and inter-annotator agreement.
 6. Develop and validate ABS/RS.
 7. Statistical analysis.
