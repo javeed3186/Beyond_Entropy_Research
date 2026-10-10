@@ -1,0 +1,10 @@
+event_id,total_records,nonempty_text_records,unique_normalized_texts,records_in_duplicate_groups,records_beyond_first_occurrence,duplicate_group_record_share_percent
+E001,171,171,52,129,119,75.4
+E002,144,144,138,8,6,5.6
+E003,6,6,6,0,0,0.0
+E005,24,24,24,0,0,0.0
+E006,104,104,59,52,45,50.0
+E007,11,11,11,0,0,0.0
+E008,148,148,132,19,16,12.8
+E009,137,137,106,40,31,29.2
+E010,14,14,14,0,0,0.0
